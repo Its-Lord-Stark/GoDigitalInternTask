@@ -18,7 +18,7 @@ resource "aws_rds_instance" "my_rds" {
 }
 
 resource "aws_s3_bucket" "my_bucket" {
-  bucket = "data-pipeline-bucket-unique"
+  bucket = "data-pipeline-bucket-unique-789123"
 }
 
 resource "aws_iam_role" "lambda_execution_role" {
@@ -57,7 +57,7 @@ resource "aws_lambda_function" "my_lambda" {
   environment {
     variables = {
       S3_BUCKET = aws_s3_bucket.my_bucket.bucket
-      S3_FILE_KEY = "data_file_key"  # Adjust as needed
+      S3_FILE_KEY = "data_file_key" 
       RDS_HOST  = aws_rds_instance.my_rds.address
       RDS_USER  = "root"
       RDS_PASS  = "root"
