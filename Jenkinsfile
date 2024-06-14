@@ -1,32 +1,35 @@
 pipeline {
     agent any
 
-    environment {
+   environment {
+        AWS_ACCOUNT_ID = '939533572395'
         AWS_DEFAULT_REGION = 'ap-south-1'
         ECR_REPOSITORY = 'aws-data-pipeline-repo'
         IMAGE_TAG = 'latest'
-        AWS_ACCOUNT_ID = '939533572395'
+        AWS_CREDENTIALS_ID = 'aws-credentials-id'  // Make sure this matches your configured credentials in Jenkins
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/Its-Lord-Stark/aws-data-pipeline.git'
+                git 'https://github.com/Its-Lord-Stark/aws-data-pipeline'
             }
         }
+
         stage('Build Docker Image') {
             steps {
                 script {
-                    def appImage = docker.build("${env.ECR_REPOSITORY}:${env.IMAGE_TAG}")
+                    docker.build("${ECR_REPOSITORY}:${IMAGE_TAG}")
                 }
             }
         }
+
         stage('Push Docker Image to ECR') {
             steps {
-                withAWS(credentials: 'aws-credentials-id', region: 'ap-south-1') {
+                withAWS(credentials: "${AWS_CREDENTIALS_ID}", region: "${AWS_DEFAULT_REGION}") {
                     script {
-                        docker.withRegistry("https://${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_DEFAULT_REGION}.amazonaws.com", 'ecr:ap-south-1:aws') {
-                            def appImage = docker.image("${env.ECR_REPOSITORY}:${env.IMAGE_TAG}")
+                        docker.withRegistry("https://${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com", "${AWS_CREDENTIALS_ID}") {
+                            def appImage = docker.image("${ECR_REPOSITORY}:${IMAGE_TAG}")
                             appImage.push()
                         }
                     }
