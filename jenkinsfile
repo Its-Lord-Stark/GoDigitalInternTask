@@ -7,6 +7,7 @@ pipeline {
     IMAGE_TAG = 'latest'
     AWS_ACCOUNT_ID = '939533572395'  
   }
+  //Its env
 
   stages {
     stage('Checkout') {
