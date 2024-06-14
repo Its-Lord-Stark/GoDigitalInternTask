@@ -6,7 +6,7 @@ pipeline {
         AWS_DEFAULT_REGION = 'ap-south-1'
         ECR_REPOSITORY = 'aws-data-pipeline-repo'
         IMAGE_TAG = 'latest'
-        AWS_CREDENTIALS_ID = 'aws-credentials-id'  // Ensure this matches your configured credentials in Jenkins
+        AWS_CREDENTIALS_ID = 'aws123'  // Ensure this matches your configured credentials in Jenkins
         GIT_REPOSITORY = 'https://github.com/Its-Lord-Stark/aws-data-pipeline'
         GIT_BRANCH = 'main'  // Update to your branch name
     }
@@ -44,7 +44,7 @@ pipeline {
 
         stage('Deploy with Terraform') {
             steps {
-                withAWS(credentials: 'aws-credentials-id', region: 'ap-south-1') {
+                withAWS(credentials: 'aws123', region: 'ap-south-1') {
                     sh 'terraform init'
                     sh 'terraform apply -auto-approve'
                 }
