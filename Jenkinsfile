@@ -1,25 +1,30 @@
 pipeline {
     agent any
 
-   environment {
+    environment {
         AWS_ACCOUNT_ID = '939533572395'
         AWS_DEFAULT_REGION = 'ap-south-1'
         ECR_REPOSITORY = 'aws-data-pipeline-repo'
         IMAGE_TAG = 'latest'
-        AWS_CREDENTIALS_ID = 'aws-credentials-id'  // Make sure this matches your configured credentials in Jenkins
+        AWS_CREDENTIALS_ID = 'aws-credentials-id'  // Ensure this matches your configured credentials in Jenkins
+        GIT_REPOSITORY = 'https://github.com/Its-Lord-Stark/aws-data-pipeline'
+        GIT_BRANCH = 'main'  // Update to your branch name
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/Its-Lord-Stark/aws-data-pipeline'
+                script {
+                    checkout([$class: 'GitSCM', branches: [[name: "${GIT_BRANCH}"]],
+                        userRemoteConfigs: [[url: "${GIT_REPOSITORY}"]]])
+                }
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build("${ECR_REPOSITORY}:${IMAGE_TAG}")
+                    def dockerImage = docker.build("${ECR_REPOSITORY}:${IMAGE_TAG}")
                 }
             }
         }
@@ -36,6 +41,7 @@ pipeline {
                 }
             }
         }
+
         stage('Deploy with Terraform') {
             steps {
                 withAWS(credentials: 'aws-credentials-id', region: 'ap-south-1') {
