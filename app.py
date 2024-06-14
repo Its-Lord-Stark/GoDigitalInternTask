@@ -1,5 +1,5 @@
-import boto3
-import pymysql
+import boto3 # type: ignore
+import pymysql # type: ignore
 import os
 
 def create_table_if_not_exists(cursor, table_name):
