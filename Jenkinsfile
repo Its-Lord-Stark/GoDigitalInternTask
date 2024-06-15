@@ -6,7 +6,7 @@ pipeline {
         AWS_DEFAULT_REGION = 'ap-south-1'
         ECR_REPOSITORY = 'aws-data-pipeline-repo'
         IMAGE_TAG = 'latest'
-        AWS_CREDENTIALS_ID = 'aws-cred'  // Ensure this matches your configured credentials in Jenkins
+        AWS_CREDENTIALS_ID = 'aws-cred1'  // Ensure this matches your configured credentials in Jenkins
         GIT_REPOSITORY = 'https://github.com/Its-Lord-Stark/aws-data-pipeline'
         GIT_BRANCH = 'main'  // Update to your branch name
     }
