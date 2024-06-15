@@ -42,7 +42,7 @@ resource "aws_iam_role" "lambda_execution_role" {
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AmazonS3FullAccess",
     "arn:aws:iam::aws:policy/AmazonRDSFullAccess",
-    "arn:aws:iam::aws:policy/AWSGlueServiceRole"
+    // "arn:aws:iam::aws:policy/AWSGlueServiceRole"
   ]
 }
 
