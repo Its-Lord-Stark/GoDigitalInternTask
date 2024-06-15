@@ -31,7 +31,7 @@ pipeline {
 
         stage('Push Docker Image to ECR') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'aws-cred', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                withCredentials([usernamePassword(credentialsId: 'aws-cred2', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                     script {
                         def dockerLoginCmd = "echo \"${AWS_SECRET_ACCESS_KEY}\" | docker login -u AWS --password-stdin https://939533572395.dkr.ecr.ap-south-1.amazonaws.com"
                         sh dockerLoginCmd
@@ -48,7 +48,7 @@ pipeline {
 
         stage('Deploy with Terraform') {
             steps {
-                withAWS(credentials: 'aws-cred', region: 'ap-south-1') {
+                withAWS(credentials: 'aws-cred2', region: 'ap-south-1') {
                     sh 'terraform init'
                     sh 'terraform apply -auto-approve'
                 }
