@@ -16,7 +16,7 @@ def read_from_s3_and_push_to_rds(bucket_name, s3_file_key, rds_host, rds_user, r
         s3 = boto3.client('s3')
         obj = s3.get_object(Bucket=bucket_name, Key=s3_file_key)
         data = obj['Body'].read().decode('utf-8')
-        names = data.splitlines()
+        nameslist = data.splitlines()
 
         conn = pymysql.connect(host=rds_host, user=rds_user, password=rds_password, db=rds_db)
         cursor = conn.cursor()
@@ -24,7 +24,7 @@ def read_from_s3_and_push_to_rds(bucket_name, s3_file_key, rds_host, rds_user, r
         # Create table if it does not exist
         create_table_if_not_exists(cursor, names)
 
-        for name in names:
+        for name in nameslist:
             cursor.execute(f"INSERT INTO {rds_table} (name) VALUES (%s)", (name,))
         conn.commit()
         conn.close()
