@@ -1,5 +1,5 @@
-import boto3 # type: ignore
-import pymysql # type: ignore
+import boto3 
+import pymysql 
 import os
 
 def create_table_if_not_exists(cursor, names):
@@ -30,7 +30,7 @@ def read_from_s3_and_push_to_rds(bucket_name, s3_file_key, rds_host, rds_user, r
         conn.close()
     except pymysql.MySQLError as e:
         print(f"Error: {e}")
-        print("Could not connect to RDS")
+        print("Could not connect to RDS due to issue")
 
 if __name__ == "__main__":
     bucket_name = os.getenv('S3_BUCKET')
