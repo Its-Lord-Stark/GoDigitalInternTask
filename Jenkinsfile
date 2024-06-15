@@ -90,19 +90,22 @@ pipeline {
             }
         }
 
-        stage('Push Docker Image to ECR') {
+         stage('Push Docker Image to ECR') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'aws-cred2', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                withCredentials([string(credentialsId: 'aws-access-key-id', variable: 'AWS_ACCESS_KEY_ID'), string(credentialsId: 'aws-secret-access-key', variable: 'AWS_SECRET_ACCESS_KEY')]) {
                     script {
-                        // Docker login for ECR
-                        sh """
-                        echo ${AWS_SECRET_ACCESS_KEY} | docker login -u ${AWS_ACCESS_KEY_ID} --password-stdin https://${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com
-                        """
-
-                        // Push Docker image to ECR
-                        docker.withRegistry("https://${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com", "${AWS_CREDENTIALS_ID}") {
-                            def appImage = docker.image("${ECR_REPOSITORY}:${IMAGE_TAG}")
-                            appImage.push()
+                        if (isUnix()) {
+                            sh '''
+                            $(aws ecr get-login --no-include-email --region ${AWS_REGION})
+                            docker tag ${DOCKER_IMAGE} ${ECR_REGISTRY}/${ECR_REPOSITORY}:${BUILD_NUMBER}
+                            docker push ${ECR_REGISTRY}/${ECR_REPOSITORY}:${BUILD_NUMBER}
+                            '''
+                        } else {
+                            bat '''
+                            FOR /F "tokens=*" %%i IN ('aws ecr get-login-password --region %AWS_REGION%') DO docker login --username AWS --password %%i %ECR_REGISTRY%
+                            docker tag %DOCKER_IMAGE% %ECR_REGISTRY%/%ECR_REPOSITORY%:%BUILD_NUMBER%
+                            docker push %ECR_REGISTRY%/%ECR_REPOSITORY%:%BUILD_NUMBER%
+                            '''
                         }
                     }
                 }
