@@ -31,14 +31,17 @@ pipeline {
 
         stage('Push Docker Image to ECR') {
             steps {
-                withAWS(credentials: "${AWS_CREDENTIALS_ID}", region: "${AWS_DEFAULT_REGION}") {
-                    script {
-                        docker.withRegistry("https://${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com", "${AWS_CREDENTIALS_ID}") {
-                            def appImage = docker.image("${ECR_REPOSITORY}:${IMAGE_TAG}")
-                            appImage.push()
-                        }
-                    }
+                withCredentials([usernamePassword(credentialsId: 'aws-cred', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+            script {
+                def dockerLoginCmd = "echo \"${AWS_SECRET_ACCESS_KEY}\" | docker login -u AWS --password-stdin https://939533572395.dkr.ecr.ap-south-1.amazonaws.com"
+                sh dockerLoginCmd
+
+                // Push Docker image to ECR
+                docker.withRegistry("https://${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com", "ecr:ap-south-1:${AWS_CREDENTIALS_ID}") {
+                    def appImage = docker.image("${ECR_REPOSITORY}:${IMAGE_TAG}")
+                    appImage.push()
                 }
+
             }
         }
 
@@ -52,3 +55,17 @@ pipeline {
         }
     }
 }
+
+
+
+
+
+
+                // withAWS(credentials: "${AWS_CREDENTIALS_ID}", region: "${AWS_DEFAULT_REGION}") {
+                //     script {
+                //         docker.withRegistry("https://${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com", "${AWS_CREDENTIALS_ID}") {
+                //             def appImage = docker.image("${ECR_REPOSITORY}:${IMAGE_TAG}")
+                //             appImage.push()
+                //         }
+                //     }
+                // }
