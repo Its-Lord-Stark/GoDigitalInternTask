@@ -14,7 +14,7 @@ resource "aws_db_instance" "my_rds" {
   // name                 = "data_pipeline_db"
   username             = "root"
   password             = "rootstark"
-  parameter_group_name = "default.mysql5.7"
+  parameter_group_name = "default.mysq8.0"
   skip_final_snapshot  = true
 }
 
