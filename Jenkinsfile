@@ -92,7 +92,7 @@ pipeline {
 
          stage('Push Docker Image to ECR') {
             steps {
-                withCredentials([string(credentialsId: 'aws-cred2', variable: 'AWS_ACCESS_KEY_ID'), string(credentialsId: 'aws-secret-access-key', variable: 'AWS_SECRET_ACCESS_KEY')]) {
+                withCredentials([string(credentialsId: 'aws-cred', variable: 'AWS_ACCESS_KEY_ID'), string(credentialsId: 'aws-secret-access-key', variable: 'AWS_SECRET_ACCESS_KEY')]) {
                     script {
                         if (isUnix()) {
                             sh '''
@@ -114,7 +114,7 @@ pipeline {
 
         stage('Deploy with Terraform') {
             steps {
-                withAWS(credentials: 'aws-cred2', region: 'ap-south-1') {
+                withAWS(credentials: 'aws-cred', region: 'ap-south-1') {
                     bat 'terraform init'
                     bat 'terraform apply -auto-approve'
                 }
