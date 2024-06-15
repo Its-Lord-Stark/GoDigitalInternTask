@@ -57,7 +57,6 @@
 //     }
 // }
 
-
 pipeline {
     agent any
 
@@ -78,6 +77,29 @@ pipeline {
                 script {
                     checkout([$class: 'GitSCM', branches: [[name: "${GIT_BRANCH}"]],
                         userRemoteConfigs: [[url: "${GIT_REPOSITORY}"]]])
+                }
+            }
+        }
+
+        stage('Ensure ECR Repository Exists') {
+            steps {
+                withCredentials([string(credentialsId: 'aws-access-key-id', variable: 'AWS_ACCESS_KEY_ID'), 
+                                 string(credentialsId: 'aws-secret-access-key', variable: 'AWS_SECRET_ACCESS_KEY')]) {
+                    script {
+                        if (isUnix()) {
+                            sh '''
+                            export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+                            export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+                            aws ecr describe-repositories --repository-names ${ECR_REPOSITORY} || aws ecr create-repository --repository-name ${ECR_REPOSITORY}
+                            '''
+                        } else {
+                            bat '''
+                            set AWS_ACCESS_KEY_ID=%AWS_ACCESS_KEY_ID%
+                            set AWS_SECRET_ACCESS_KEY=%AWS_SECRET_ACCESS_KEY%
+                            aws ecr describe-repositories --repository-names %ECR_REPOSITORY% || aws ecr create-repository --repository-name %ECR_REPOSITORY%
+                            '''
+                        }
+                    }
                 }
             }
         }
@@ -139,15 +161,15 @@ pipeline {
         }
     }
 
-    post {
-        always {
-            cleanWs()
-        }
-        success {
-            echo 'Pipeline completed successfully!'
-        }
-        failure {
-            echo 'Pipeline failed!'
-        }
-    }
+    // post {
+    //     always {
+    //         cleanWs()
+    //     }
+    //     success {
+    //         echo 'Pipeline completed successfully!'
+    //     }
+    //     failure {
+    //         echo 'Pipeline failed!'
+    //     }
+    // }
 }
