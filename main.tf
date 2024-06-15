@@ -153,7 +153,7 @@ resource "aws_iam_role" "ecr_access_role" {
   })
 
   managed_policy_arns = [
-    "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+    "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess"
     // Add more policies if needed for additional ECR access
   ]
 }
@@ -169,7 +169,7 @@ data "aws_iam_policy_document" "assume_ecr_role_policy" {
 }
 
 data "aws_iam_policy" "ecr_access_policy" {
-  arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+  arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess"
 }
 
 resource "aws_iam_role_policy_attachment" "ecr_access_attachment" {
