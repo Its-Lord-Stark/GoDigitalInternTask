@@ -2,7 +2,7 @@ import boto3 # type: ignore
 import pymysql # type: ignore
 import os
 
-def create_table_if_not_exists(cursor, table_name):
+def create_table_if_not_exists(cursor, names):
     create_table_query = f"""
     CREATE TABLE IF NOT EXISTS names (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -22,7 +22,7 @@ def read_from_s3_and_push_to_rds(bucket_name, s3_file_key, rds_host, rds_user, r
         cursor = conn.cursor()
 
         # Create table if it does not exist
-        create_table_if_not_exists(cursor, rds_table)
+        create_table_if_not_exists(cursor, names)
 
         for name in names:
             cursor.execute(f"INSERT INTO {rds_table} (name) VALUES (%s)", (name,))
