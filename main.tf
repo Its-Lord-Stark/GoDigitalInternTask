@@ -3,14 +3,14 @@ provider "aws" {
   region = "ap-south-1"
 }
 
-resource "aws_ecr_repository" "my_repository" {
-  name = "aws-data-pipeline-repo"
-}
+// resource "aws_ecr_repository" "my_repository" {
+//   name = "aws-data-pipeline-repo"
+// }
 
 resource "aws_db_instance" "my_rds" {
   allocated_storage    = 20
   engine               = "mysql"
-  instance_class       = "db.t2.micro"
+  instance_class       = "db.t3.micro"
   // name                 = "data_pipeline_db"
   username             = "root"
   password             = "root"
