@@ -13,7 +13,7 @@ resource "aws_db_instance" "my_rds" {
   instance_class       = "db.t3.micro"
   // name                 = "data_pipeline_db"
   username             = "root"
-  password             = "root"
+  password             = "rootstark"
   parameter_group_name = "default.mysql5.7"
   skip_final_snapshot  = true
 }
@@ -22,8 +22,8 @@ resource "aws_s3_bucket" "my_bucket" {
   bucket = "data-pipeline-bucket-unique-789123"
 }
 
-resource "aws_iam_role" "lambda_execution_role" {
-  name = "lambda_execution_role"
+resource "aws_iam_role" "lambda_execution_role_1" {
+  name = "lambda_execution_role_1"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -49,7 +49,7 @@ resource "aws_iam_role" "lambda_execution_role" {
 resource "aws_lambda_function" "my_lambda" {
   filename         = "lambda_function_payload.zip"
   function_name    = "data_pipeline_lambda"
-  role             = aws_iam_role.lambda_execution_role.arn
+  role             = aws_iam_role.lambda_execution_role_1.arn
   handler          = "app.lambda_handler"
   runtime          = "python3.8"
   timeout          = 60
