@@ -11,7 +11,7 @@ resource "aws_db_instance" "my_rds" {
   allocated_storage    = 20
   engine               = "mysql"
   instance_class       = "db.t3.micro"
-  name                 = "data_pipeline_db"
+  // name                 = "data_pipeline_db"
   username             = "root"
   password             = "rootstark"
   parameter_group_name = "default.mysql8.0"
