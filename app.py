@@ -1,9 +1,9 @@
-import boto3 
-import pymysql 
+import boto3
+import mysql.connector
 import os
 
 def create_table_if_not_exists(cursor, names):
-    create_table_query = f"""
+    create_table_query = """
     CREATE TABLE IF NOT EXISTS names (
         id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(255) NOT NULL
@@ -18,7 +18,12 @@ def read_from_s3_and_push_to_rds(bucket_name, s3_file_key, rds_host, rds_user, r
     names = data.splitlines()
 
     try:
-        conn = pymysql.connect(host=rds_host, user=rds_user, password=rds_password, db=rds_db)
+        conn = mysql.connector.connect(
+            host=rds_host,
+            user=rds_user,
+            password=rds_password,
+            database=rds_db
+        )
         cursor = conn.cursor()
 
         # Create table if it does not exist
@@ -28,9 +33,9 @@ def read_from_s3_and_push_to_rds(bucket_name, s3_file_key, rds_host, rds_user, r
             cursor.execute(f"INSERT INTO {rds_table} (name) VALUES (%s)", (name,))
         conn.commit()
         conn.close()
-    except pymysql.MySQLError as e:
+    except mysql.connector.Error as e:
         print(f"Error: {e}")
-        print("Could not connect to RDS due to issue")
+        print("Could not connect to RDS")
 
 if __name__ == "__main__":
     bucket_name = os.getenv('S3_BUCKET')
