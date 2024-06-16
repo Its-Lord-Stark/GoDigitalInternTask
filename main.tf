@@ -17,7 +17,7 @@ resource "aws_db_instance" "mydb" {
   }
     provisioner "remote-exec" {
     inline = [
-      "mysql -h ${self.address} -u root -p${self.password} -e 'CREATE TABLE names (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255));'"
+      "mysql -h ${self.address} -u${self.username} -p${self.password} -e 'CREATE TABLE names (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255));'"
     ]
   }
 }
