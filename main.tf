@@ -4,7 +4,7 @@ provider "aws" {
 }
 
 
-resource "aws_db_instance" "my_rds" {
+resource "aws_db_instance" "mydb" {
   allocated_storage      = 20
   engine                 = "mysql"
   instance_class         = "db.t3.micro"
@@ -12,7 +12,7 @@ resource "aws_db_instance" "my_rds" {
   password               = "rootstark"
   parameter_group_name   = "default.mysql8.0"
   skip_final_snapshot    = true
-  publicly_accessible    = true  # Enable public access
+  publicly_accessible    = true 
 }
 
 
@@ -56,7 +56,7 @@ resource "aws_lambda_function" "my_lambda" {
     variables = {
       S3_BUCKET = aws_s3_bucket.my_bucket.bucket
       S3_FILE_KEY = "idk.csv" 
-      RDS_HOST  = aws_db_instance.my_rds.address
+      RDS_HOST  = aws_db_instance.mydb.address
       RDS_USER  = "root"
       RDS_PASS  = "rootstark"
       RDS_DB    = "mydb"
