@@ -108,7 +108,7 @@ resource "aws_iam_role_policy_attachment" "ecr_access_attachment" {
 resource "null_resource" "create_database" {
   provisioner "local-exec" {
     command = <<-EOF
-      mysql -h ${aws_db_instance.mydb.address} -u ${aws_db_instance.mydb.username} -p${aws_db_instance.mydb.password} -e "CREATE DATABASE IF NOT EXISTS mydb;"
+      mysql -h ${aws_db_instance.mydb.address} -u ${aws_db_instance.mydb.username} -p${aws_db_instance.mydb.password} -e "CREATE DATABASE IF NOT EXISTS mydb1;"
     EOF
   }
 
