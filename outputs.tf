@@ -3,7 +3,7 @@
 // }
 
 output "rds_endpoint" {
-  value = aws_db_instance.my_db.endpoint
+  value = aws_db_instance.mydb.endpoint
 }
 
 output "s3_bucket_name" {
