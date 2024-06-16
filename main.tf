@@ -16,12 +16,12 @@ resource "aws_db_instance" "mydb" {
     Name = "mydb"
   }
 
-  provisioner "remote-exec" {
-    inline = [
-      "mysql -h ${self.address} -u${self.username} -p${self.password} -e 'CREATE DATABASE IF NOT EXISTS mydb;'",
-      "mysql -h ${self.address} -u${self.username} -p${self.password} -e 'USE mydb; CREATE TABLE IF NOT EXISTS names (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255));'"
-    ]
-  }
+  // provisioner "remote-exec" {
+  //   inline = [
+  //     "mysql -h ${self.address} -u${self.username} -p${self.password} -e 'CREATE DATABASE IF NOT EXISTS mydb;'",
+  //     "mysql -h ${self.address} -u${self.username} -p${self.password} -e 'USE mydb; CREATE TABLE IF NOT EXISTS names (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255));'"
+  //   ]
+  // }
 }
 
 resource "aws_s3_bucket" "my_bucket" {
