@@ -19,7 +19,7 @@ resource "aws_db_instance" "mydb" {
   provisioner "remote-exec" {
     inline = [
       "mysql -h ${self.address} -u${self.username} -p${self.password} -e 'CREATE DATABASE IF NOT EXISTS mydb;'",
-      "mysql -h ${self.address} -u${self.username} -p${self.password} -e 'USE mydb; CREATE TABLE names (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255));'"
+      "mysql -h ${self.address} -u${self.username} -p${self.password} -e 'USE mydb; CREATE TABLE IF NOT EXISTS names (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255));'"
     ]
   }
 }
@@ -111,5 +111,3 @@ resource "aws_iam_role_policy_attachment" "ecr_access_attachment" {
   role       = aws_iam_role.ecr_access_role.name
   policy_arn = data.aws_iam_policy.ecr_access_policy.arn
 }
-
-
