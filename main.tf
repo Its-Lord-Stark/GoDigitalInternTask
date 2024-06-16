@@ -1,8 +1,6 @@
-
 provider "aws" {
   region = "ap-south-1"
 }
-
 
 resource "aws_db_instance" "mydb" {
   allocated_storage      = 20
@@ -18,7 +16,6 @@ resource "aws_db_instance" "mydb" {
     Name = "mydb"
   }
 }
-
 
 resource "aws_s3_bucket" "my_bucket" {
   bucket = "data-pipeline-bucket-unique-789123"
@@ -106,4 +103,14 @@ data "aws_iam_policy" "ecr_access_policy" {
 resource "aws_iam_role_policy_attachment" "ecr_access_attachment" {
   role       = aws_iam_role.ecr_access_role.name
   policy_arn = data.aws_iam_policy.ecr_access_policy.arn
+}
+
+resource "null_resource" "create_database" {
+  provisioner "local-exec" {
+    command = <<EOF
+      mysql -h ${aws_db_instance.mydb.address} -u ${aws_db_instance.mydb.username} -p${aws_db_instance.mydb.password} -e "CREATE DATABASE IF NOT EXISTS mydb;"
+    EOF
+  }
+
+  depends_on = [aws_db_instance.mydb]
 }
