@@ -5,14 +5,16 @@ provider "aws" {
 
 
 resource "aws_db_instance" "my_rds" {
-  allocated_storage    = 20
-  engine               = "mysql"
-  instance_class       = "db.t3.micro"
-  username             = "root"
-  password             = "rootstark"
-  parameter_group_name = "default.mysql8.0"
-  skip_final_snapshot  = true
+  allocated_storage      = 20
+  engine                 = "mysql"
+  instance_class         = "db.t3.micro"
+  username               = "root"
+  password               = "rootstark"
+  parameter_group_name   = "default.mysql8.0"
+  skip_final_snapshot    = true
+  publicly_accessible    = true  # Enable public access
 }
+
 
 resource "aws_s3_bucket" "my_bucket" {
   bucket = "data-pipeline-bucket-unique-789123"
