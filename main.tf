@@ -16,6 +16,7 @@ resource "aws_db_instance" "mydb" {
     Name = "mydb"
   }
 
+//Had some errors 
   // provisioner "remote-exec" {
   //   inline = [
   //     "mysql -h ${self.address} -u${self.username} -p${self.password} -e 'CREATE DATABASE IF NOT EXISTS mydb;'",

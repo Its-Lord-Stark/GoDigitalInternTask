@@ -21,7 +21,7 @@ def read_from_s3_and_push_to_rds(bucket_name, s3_file_key, rds_host, rds_user, r
         conn = pymysql.connect(host=rds_host, user=rds_user, password=rds_password, db=rds_db)
         cursor = conn.cursor()
 
-        # Create table if it does not exist
+        # Creating table if it does not exist
         create_table_if_not_exists(cursor)
 
         for name in nameslist:

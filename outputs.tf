@@ -1,3 +1,5 @@
+//Had to push docker images to ECR so i added its seperate job in Jenkins rather than tf task
+
 // output "ecr_repository_url" {
 //   value = aws_ecr_repository.my_repository.repository_url
 // }

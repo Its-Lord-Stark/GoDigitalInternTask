@@ -9,7 +9,7 @@ pipeline {
         ECR_REPOSITORY = 'aws-data-pipeline-repo'
         IMAGE_TAG = 'latest'
         GIT_REPOSITORY = 'https://github.com/Its-Lord-Stark/aws-data-pipeline'
-        GIT_BRANCH = 'main'  // Update to your branch name
+        GIT_BRANCH = 'main'
         DOCKER_IMAGE = "${ECR_REPOSITORY}:${IMAGE_TAG}"
         ECR_REGISTRY = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
     }
@@ -104,15 +104,4 @@ pipeline {
         }
     }
 
-    // post {
-    //     always {
-    //         cleanWs()
-    //     }
-    //     success {
-    //         echo 'Pipeline completed successfully!'
-    //     }
-    //     failure {
-    //         echo 'Pipeline failed!'
-    //     }
-    // }
 }
