@@ -110,7 +110,7 @@ resource "null_resource" "create_database_mydb1" {
 
   provisioner "local-exec" {
     command = <<EOT
-      mysql -h ${aws_db_instance.mydb.address} -u ${aws_db_instance.mydb.username} -p${aws_db_instance.mydb.password} -e "CREATE DATABASE IF NOT EXISTS mydb1;"
+      mysql -h ${aws_db_instance.mydb.address} -u ${aws_db_instance.mydb.username} -p"${aws_db_instance.mydb.password}" -e "CREATE DATABASE IF NOT EXISTS mydb1;"
     EOT
   }
 }
