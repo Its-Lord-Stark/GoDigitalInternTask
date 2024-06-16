@@ -7,5 +7,5 @@ variable "rds_username" {
 }
 
 variable "rds_password" {
-  default = "root"
+  default = "rootstark"
 }
