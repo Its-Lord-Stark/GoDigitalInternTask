@@ -8,7 +8,6 @@ resource "aws_db_instance" "my_rds" {
   allocated_storage    = 20
   engine               = "mysql"
   instance_class       = "db.t3.micro"
-  // name                 = "data_pipeline_db"
   username             = "root"
   password             = "rootstark"
   parameter_group_name = "default.mysql8.0"
@@ -54,11 +53,11 @@ resource "aws_lambda_function" "my_lambda" {
   environment {
     variables = {
       S3_BUCKET = aws_s3_bucket.my_bucket.bucket
-      S3_FILE_KEY = "data_file_key" 
+      S3_FILE_KEY = "idk.csv" 
       RDS_HOST  = aws_db_instance.my_rds.address
       RDS_USER  = "root"
-      RDS_PASS  = "root"
-      RDS_DB    = "data_pipeline_db"
+      RDS_PASS  = "rootstark"
+      RDS_DB    = "mydb"
       RDS_TABLE = "names"  
     }
   }
