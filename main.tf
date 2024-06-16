@@ -3,9 +3,6 @@ provider "aws" {
   region = "ap-south-1"
 }
 
-// resource "aws_ecr_repository" "my_repository" {
-//   name = "aws-data-pipeline-repo"
-// }
 
 resource "aws_db_instance" "my_rds" {
   allocated_storage    = 20
@@ -42,7 +39,6 @@ resource "aws_iam_role" "lambda_execution_role_1" {
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AmazonS3FullAccess",
     "arn:aws:iam::aws:policy/AmazonRDSFullAccess",
-    // "arn:aws:iam::aws:policy/AWSGlueServiceRole"
   ]
 }
 
@@ -85,7 +81,6 @@ resource "aws_iam_role" "ecr_access_role" {
 
   managed_policy_arns = [
     "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess"
-    // Add more policies if needed for additional ECR access
   ]
 }
 
