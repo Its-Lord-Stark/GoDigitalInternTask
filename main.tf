@@ -15,14 +15,6 @@ resource "aws_db_instance" "mydb" {
   tags = {
     Name = "mydb"
   }
-
-//Had some errors 
-  // provisioner "remote-exec" {
-  //   inline = [
-  //     "mysql -h ${self.address} -u${self.username} -p${self.password} -e 'CREATE DATABASE IF NOT EXISTS mydb;'",
-  //     "mysql -h ${self.address} -u${self.username} -p${self.password} -e 'USE mydb; CREATE TABLE IF NOT EXISTS names (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255));'"
-  //   ]
-  // }
 }
 
 resource "aws_s3_bucket" "my_bucket" {
@@ -49,17 +41,20 @@ resource "aws_iam_role" "lambda_execution_role_1" {
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AmazonS3FullAccess",
     "arn:aws:iam::aws:policy/AmazonRDSFullAccess",
+    "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess"
   ]
 }
 
+resource "aws_ecr_repository" "my_repository" {
+  name = "aws-data-pipeline-repo"
+}
+
 resource "aws_lambda_function" "my_lambda" {
-  filename         = "lambda_function_payload.zip"
   function_name    = "data_pipeline_lambda"
   role             = aws_iam_role.lambda_execution_role_1.arn
-  handler          = "app.lambda_handler"
-  runtime          = "python3.8"
+  package_type     = "Image"
+  image_uri        = "${aws_ecr_repository.my_repository.repository_url}:latest"
   timeout          = 60
-  source_code_hash = filebase64sha256("lambda_function_payload.zip")
 
   environment {
     variables = {
