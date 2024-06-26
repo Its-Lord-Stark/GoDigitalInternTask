@@ -27,19 +27,11 @@ pipeline {
                 withCredentials([string(credentialsId: 'aws-access-key-id', variable: 'AWS_ACCESS_KEY_ID'), 
                                  string(credentialsId: 'aws-secret-access-key', variable: 'AWS_SECRET_ACCESS_KEY')]) {
                     script {
-                        if (isUnix()) {
-                            sh '''
-                            export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-                            export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-                            aws ecr describe-repositories --repository-names ${ECR_REPOSITORY} || aws ecr create-repository --repository-name ${ECR_REPOSITORY}
-                            '''
-                        } else {
-                            bat '''
-                            set AWS_ACCESS_KEY_ID=%AWS_ACCESS_KEY_ID%
-                            set AWS_SECRET_ACCESS_KEY=%AWS_SECRET_ACCESS_KEY%
-                            aws ecr describe-repositories --repository-names %ECR_REPOSITORY% || aws ecr create-repository --repository-name %ECR_REPOSITORY%
-                            '''
-                        }
+                        bat '''
+                        set AWS_ACCESS_KEY_ID=%AWS_ACCESS_KEY_ID%
+                        set AWS_SECRET_ACCESS_KEY=%AWS_SECRET_ACCESS_KEY%
+                        aws ecr describe-repositories --repository-names %ECR_REPOSITORY% || aws ecr create-repository --repository-name %ECR_REPOSITORY%
+                        '''
                     }
                 }
             }
@@ -58,19 +50,11 @@ pipeline {
                 withCredentials([string(credentialsId: 'aws-access-key-id', variable: 'AWS_ACCESS_KEY_ID'), 
                                  string(credentialsId: 'aws-secret-access-key', variable: 'AWS_SECRET_ACCESS_KEY')]) {
                     script {
-                        if (isUnix()) {
-                            sh '''
-                            aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY}
-                            docker tag ${DOCKER_IMAGE} ${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}
-                            docker push ${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}
-                            '''
-                        } else {
-                            bat '''
-                            FOR /F "tokens=*" %%i IN ('aws ecr get-login-password --region %AWS_DEFAULT_REGION%') DO docker login --username AWS --password %%i %ECR_REGISTRY%
-                            docker tag %DOCKER_IMAGE% %ECR_REGISTRY%/%ECR_REPOSITORY%:%IMAGE_TAG%
-                            docker push %ECR_REGISTRY%/%ECR_REPOSITORY%:%IMAGE_TAG%
-                            '''
-                        }
+                        bat '''
+                        FOR /F "tokens=*" %%i IN ('aws ecr get-login-password --region %AWS_DEFAULT_REGION%') DO docker login --username AWS --password %%i %ECR_REGISTRY%
+                        docker tag %DOCKER_IMAGE% %ECR_REGISTRY%/%ECR_REPOSITORY%:%IMAGE_TAG%
+                        docker push %ECR_REGISTRY%/%ECR_REPOSITORY%:%IMAGE_TAG%
+                        '''
                     }
                 }
             }
@@ -81,25 +65,15 @@ pipeline {
                 withCredentials([string(credentialsId: 'aws-access-key-id', variable: 'AWS_ACCESS_KEY_ID'), 
                                  string(credentialsId: 'aws-secret-access-key', variable: 'AWS_SECRET_ACCESS_KEY')]) {
                     script {
-                        if (isUnix()) {
-                            sh '''
-                            export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-                            export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-                            terraform init
-                            terraform apply -auto-approve
-                            '''
-                        } else {
-                            bat '''
-                            set AWS_ACCESS_KEY_ID=%AWS_ACCESS_KEY_ID%
-                            set AWS_SECRET_ACCESS_KEY=%AWS_SECRET_ACCESS_KEY%
-                            terraform init
-                            terraform apply -auto-approve
-                            '''
-                        }
+                        bat '''
+                        set AWS_ACCESS_KEY_ID=%AWS_ACCESS_KEY_ID%
+                        set AWS_SECRET_ACCESS_KEY=%AWS_SECRET_ACCESS_KEY%
+                        terraform init
+                        terraform apply -auto-approve
+                        '''
                     }
                 }
             }
         }
     }
-
 }
